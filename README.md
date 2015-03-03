@@ -1,5 +1,5 @@
 # Roboter
 Arduino Roboter Sourcecode für die App RoboControl
 
-Eine genaue Erklärung kommt noch :)
+Genauere Dokumentation unter https://www.dropbox.com/home/Fokus%20Maturaarbeit erhältlich.
 
