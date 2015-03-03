@@ -30,6 +30,7 @@ Servo servoLB, servoLF, servoRF, servoRB;
 double percentDiff, backwardSpeedL, forwardSpeedL, backwardSpeedR, forwardSpeedR;
 long t1_1,t1_2,t2_1,t2_2;            // Timervariablen
 String readString,num1,num2;
+float b;
 boolean hardBlock = false;           // Manuelle Bedinung, wenn hardBlock = true, ist die automatische Erkennung der XBeeSteuerung deaktiviert
 
 void setup() {
@@ -100,7 +101,8 @@ void loop() {
       /* leftVal und motorVal Umskalieren
       innere Räder 43% langsamer als die äussere Räder, je nach der Wert von leftVal
       Max. Geschwindigkeit 50*/
-      backwardSpeed = map(motorVal, 420, 0, 0, maxSpeed/100*80);
+      b =  maxSpeed/100*80;
+      backwardSpeed = map(motorVal, 420, 0, 0, (int) b);
       percentDiff = map(leftVal, 0, 4, 100, 43);
       backwardSpeedL = backwardSpeed * percentDiff / 100;
       analogWrite(7, backwardSpeedL); // Pin 7, “backwardSpeedL” schreiben
@@ -111,7 +113,8 @@ void loop() {
     if (motorVal > 603) {// vorwärts fahren
       brakeOff();
       forward();
-      forwardSpeed = map(motorVal, 603, 1023, 0, maxSpeed/100*80);
+      b =  maxSpeed/100*80;
+      forwardSpeed = map(motorVal, 603, 1023, 0, (int) b);
       percentDiff = map(leftVal, 0, 4, 100, 43);
       forwardSpeedL = forwardSpeed * percentDiff / 100;
       analogWrite(7, forwardSpeedL);
@@ -128,7 +131,8 @@ void loop() {
     if (motorVal > 603) {
       brakeOff();
       forward();
-      forwardSpeed = map(motorVal, 603, 1023, 0, maxSpeed/100*geradeSpeed);
+      b =  maxSpeed/100*geradeSpeed;
+      forwardSpeed = map(motorVal, 603, 1023, 0, (int) b);
       analogWrite(7, forwardSpeed);
       analogWrite(6, forwardSpeed);
       analogWrite(5, forwardSpeed);
@@ -137,7 +141,8 @@ void loop() {
     if (motorVal < 420) {
       brakeOff();
       backward();
-      backwardSpeed = map(motorVal, 420, 0, 0, maxSpeed/100*geradeSpeed);
+      b = maxSpeed/100*geradeSpeed;
+      backwardSpeed = map(motorVal, 420, 0, 0, (int) b);
       analogWrite(7, backwardSpeed);
       analogWrite(6, backwardSpeed);
       analogWrite(5, backwardSpeed);
@@ -153,7 +158,8 @@ void loop() {
     if (motorVal < 420){
       brakeOff();
       backward();
-      backwardSpeed = map(motorVal, 420, 0, 0, maxSpeed/100*80);
+      b = maxSpeed/100*80;
+      backwardSpeed = map(motorVal, 420, 0, 0, (int) b);
       percentDiff = map(leftVal, 0, 4, 100, 43);
       backwardSpeedR = backwardSpeed * percentDiff / 100;
       analogWrite(7, backwardSpeed);
@@ -164,7 +170,8 @@ void loop() {
     if (motorVal > 603) {
       brakeOff();
       forward();
-      forwardSpeed = map(motorVal, 603, 1023, 0, maxSpeed/100*80);
+      b = maxSpeed/100*80;
+      forwardSpeed = map(motorVal, 603, 1023, 0, (int) b);
       percentDiff = map(leftVal, 0, 4, 100, 43);
       forwardSpeedR = forwardSpeed * percentDiff / 100;
       analogWrite(7, forwardSpeed);
