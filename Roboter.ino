@@ -3,7 +3,7 @@
 //                                    01.03.2015                                                      //
 //                           Bang Ngyuen Khanh & Philip Wiese                                         //
 //                                                                                                    //
-//                                      Experimental                                                  //
+//                                                                                                    //
 //                                                                                                    //
 //                                                                                                    //
 //                                                                                                    //
