@@ -111,6 +111,16 @@ void setup() {
   t1_1 = millis();
   t2_1 = millis();
 
+  servoLF.writeMicroseconds(1405);
+  servoLB.writeMicroseconds(1515);
+  servoRF.writeMicroseconds(1435);
+  servoRB.writeMicroseconds(1380);
+  analogWrite(g_motor_left_front, 0);
+  analogWrite(g_motor_left_back, 0);
+  analogWrite(g_motor_right_front, 0);
+  analogWrite(g_motor_right_back, 0);
+  brakeOn();
+
   Serial1.begin(115200);
   //************************************** LCD MENU *****************************************************//
   pinMode(button_up, INPUT_PULLUP);
@@ -224,7 +234,7 @@ void roboter() {
     analogWrite(g_motor_left_back, 0);
     analogWrite(g_motor_right_front, 0);
     analogWrite(g_motor_right_back, 0);
-    if (value[5]==1) brakeOn();
+    if (value[5] == 1) brakeOn();
   }
 }
 
