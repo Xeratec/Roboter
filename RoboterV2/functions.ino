@@ -29,10 +29,10 @@ void backward() {
 void serialEvent1() {
   stringRead = "";
   while (Serial1.available()) {
-    delay(3);  //delay to allow buffer to fill
+    delay(3);
     if (Serial1.available() > 0) {
-      char c = Serial1.read();  //gets one byte from serial buffer
-      stringRead += c; //makes the string readString
+      char c = Serial1.read();
+      stringRead += c;
     }
   }
 
@@ -44,8 +44,8 @@ void serialEvent1() {
       stringRead = stringRead.substring(0, stringRead.indexOf(";"));
       if (stringRead.length() > 0) {
         int delimiter = stringRead.indexOf(":");
-        num1 = stringRead.substring(0, delimiter); //get the first four characters
-        num2 = stringRead.substring(delimiter + 1, stringRead.length()); //get the next four characters
+        num1 = stringRead.substring(0, delimiter);
+        num2 = stringRead.substring(delimiter + 1, stringRead.length());
 
         servoVal = num1.toInt();
         motorVal = num2.toInt();
@@ -116,9 +116,9 @@ void checkButtons() {
               break;
             case 1:                             // "Einstellugen" Wert erhöhen
               if (menuSubItem < 2) {            // Geschwinditkeit in 5er Schritten
-                if (value[menuSubItem] == 100) {
+                if (value[menuSubItem] == 255) {
                   value[menuSubItem] = 5;
-                } else if (value[menuSubItem] < 100) value[menuSubItem] += 5;
+                } else if (value[menuSubItem] < 255) value[menuSubItem] += 5;
               } else if (menuSubItem == 2) {    // Joystick nur 0 oder 1
                 if (value[menuSubItem] == 1) {
                   value[menuSubItem] = 0;
@@ -181,7 +181,7 @@ void checkButtons() {
             case 1:                     // "Einstellugen" Wert verkleinern
               if (menuSubItem < 2) {    // Geschwinditkeit in 5er Schritten
                 if (value[menuSubItem] == 5) {
-                  value[menuSubItem] = 100;
+                  value[menuSubItem] = 255;
                 } else if (value[menuSubItem] > 5) value[menuSubItem] -= 5;
               } else if (menuSubItem == 2) {    // Joystick nur 0 oder 1
                 if (value[menuSubItem] == 1) {

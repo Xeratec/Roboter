@@ -48,11 +48,11 @@
 #define servo_max_pulse 2100
 #define servo_min_pulse 900
 //Einstellugnen
-#define default_max_speed 50
-#define default_kurve_speed 80
-#define default_joystick 1
-#define default_stufenMotor 4
-#define default_stufenReader 4
+#define default_max_speed 45
+#define default_kurve_speed 50
+#define default_joystick 0
+#define default_stufenMotor 10
+#define default_stufenReader 20
 #define default_bremse 1
 
 //************************************* KONSTANTEN ****************************************************//
@@ -141,10 +141,6 @@ void loop() {
 
 void roboter() {
   checkControlMode();
-  //delay(50);
-  //************************************** Debug *****************************************************//
-  //************************************** Debug *****************************************************//
-
   //**************************************** LENKUNG ***************************************************//
   //**************************************** Gerade ***************************************************//
   servoAngle = 100 /  value[4] * map(abs(servoVal), 0, 100, 0 , value[4]);
@@ -173,7 +169,7 @@ void roboter() {
     }
     //**************************************** Links ***************************************************//
   } else if (servoVal < 0) {
-    motorSpeed = value[1] /  value[3] * map(abs(motorVal), 0, 100, 0 , value[3]);
+    motorSpeed = 1.42 * value[1] /  value[3] * map(abs(motorVal), 0, 100, 0 , value[3]);
     motorSpeedInner = motorSpeed * 43 / 100;
     servoLF.writeMicroseconds(map(servoAngle, 0, 100, 1405, 1824));
     servoLB.writeMicroseconds(map(servoAngle, 0, 100, 1515, 1688));
@@ -198,7 +194,7 @@ void roboter() {
     }
     //**************************************** Rechts ***************************************************//
   } else if (servoVal > 0) {
-    motorSpeed = value[1] /  value[3] * map(abs(motorVal), 0, 100, 0 , value[3]);
+    motorSpeed = 1.42 * value[1] /  value[3] * map(abs(motorVal), 0, 100, 0 , value[3]);
     motorSpeedInner = motorSpeed * 43 / 100;
     servoLF.writeMicroseconds(map(servoAngle, 0, 100, 1405, 1219));
     servoLB.writeMicroseconds(map(servoAngle, 0, 100, 1515, 1090));
