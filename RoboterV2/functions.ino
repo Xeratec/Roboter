@@ -57,7 +57,7 @@ void serialEvent1() {
 void checkControlMode() {
   t1_2 = millis();
   if (controlMode == 0) {
-    digitalWrite(status_led, HIGH);
+    digitalWrite(led_yellow, HIGH);
     if (value[2] == 1) {
       servoVal = map(analogRead(joystickX), 0, 1023, -100, 100);
       motorVal = map(analogRead(joystickY), 0, 1023, -100, 100);
@@ -68,7 +68,7 @@ void checkControlMode() {
     t2_2 = millis();
     //Status Led blinkt
     if (t1_2 - t1_1 > 500) {
-      digitalWrite(status_led, !digitalRead(status_led));
+      digitalWrite(led_yellow, !digitalRead(led_yellow));
       t1_1 = t1_2;
     }
     if (t2_2 - t2_1 > timeout) {
@@ -277,4 +277,33 @@ void checkButtons() {
       do { } while (!digitalRead(button_down));
     }
   }
+  //Entprellen des Tasters TEST1
+  value_1, value_2 = 0;
+  value_1 = digitalRead(button_test1);
+  if (!value_1) {
+    delay(50);
+    value_2 = digitalRead(button_test1);
+    if (!value_2) {
+      if (bLight) {
+        lcd.noBacklight();
+        bLight = false;
+      } else {
+        lcd.backlight();
+        bLight = true;
+      }
+      do { } while (!digitalRead(button_test1));
+    }
+  }
+  //Entprellen des Tasters TEST2
+  value_1, value_2 = 0;
+  value_1 = digitalRead(button_test2);
+  if (!value_1) {
+    delay(50);
+    value_2 = digitalRead(button_test2);
+    if (!value_2) {
+      digitalWrite(led_yellow, !digitalRead(led_yellow));
+      do { } while (!digitalRead(button_test2));
+    }
+  }
 }
+

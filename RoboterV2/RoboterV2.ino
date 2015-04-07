@@ -19,32 +19,35 @@
 
 //*********************************** CONFIGURATION **************************************************//
 //Buttons, Joystick & LED
-#define joystickX 4
-#define joystickY 5
-#define button_ControlMode 52
-#define button_up 32
-#define button_down 35
-#define button_left 36
-#define button_right 39
-#define status_led 50
+#define joystickX 14
+#define joystickY 15
+#define button_up 27
+#define button_down 26
+#define button_left 24
+#define button_right 29
+#define button_test1 33
+#define button_test2 31
+#define led_red 22
+#define led_yellow 23
+#define led_green 25
 // Motor
-#define dir_motor_left_front 22
-#define hb_motor_left_front 23
+#define dir_motor_left_front 34
+#define hb_motor_left_front 35
 #define g_motor_left_front 7
-#define dir_motor_left_back 24
-#define hb_motor_left_back 25
+#define dir_motor_left_back 36
+#define hb_motor_left_back 37
 #define g_motor_left_back 6
-#define dir_motor_right_front 26
-#define hb_motor_right_front 27
+#define dir_motor_right_front 38
+#define hb_motor_right_front 39
 #define g_motor_right_front 5
-#define dir_motor_right_back 28
-#define hb_motor_right_back 29
+#define dir_motor_right_back 40
+#define hb_motor_right_back 41
 #define g_motor_right_back 4
 // Servos
-#define servo_left_front 40
-#define servo_left_back 41
-#define servo_right_front 42
-#define servo_right_back 43
+#define servo_left_front 42
+#define servo_left_back 43
+#define servo_right_front 44
+#define servo_right_back 45
 #define servo_max_pulse 2100
 #define servo_min_pulse 900
 //Einstellugnen
@@ -84,11 +87,11 @@ Servo servoLB, servoLF, servoRF, servoRB;
 
 void setup() {
   //************************************** Debug *****************************************************//
-  /*
+  
   for (int i = 0 ; i <= subItems ; i++) {
     EEPROM.write(i, value[i]);
   }
-  */
+  
   //************************************** Debug *****************************************************//
 
   //*************************************** ROBOTER *****************************************************//
@@ -105,9 +108,11 @@ void setup() {
   pinMode(hb_motor_right_front, OUTPUT); //Hand-brake motor RF
   pinMode(dir_motor_right_back, OUTPUT); //Dir motor RB
   pinMode(hb_motor_right_back, OUTPUT); //Hand-brake motor RB
-  pinMode(status_led, OUTPUT);
+  pinMode(led_red, OUTPUT);
+  pinMode(led_yellow, OUTPUT);
+  pinMode(led_green, OUTPUT);
 
-  digitalWrite(status_led, HIGH);
+  digitalWrite(led_yellow, HIGH);
   t1_1 = millis();
   t2_1 = millis();
 
@@ -127,6 +132,8 @@ void setup() {
   pinMode(button_down, INPUT_PULLUP);
   pinMode(button_left, INPUT_PULLUP);
   pinMode(button_right, INPUT_PULLUP);
+  pinMode(button_test1, INPUT_PULLUP);
+  pinMode(button_test2, INPUT_PULLUP);
 
   lcd.init();
   lcd.backlight();
