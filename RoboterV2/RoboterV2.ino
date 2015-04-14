@@ -1,5 +1,5 @@
 //********************************** ROBOTER SKETCH **************************************************//
-//                                       V. 1.4                                                       //
+//                                       V. 1.5                                                       //
 //                                    03.04.2015                                                      //
 //                           Bang Ngyuen Khanh & Philip Wiese                                         //
 //                                                                                                    //
@@ -19,35 +19,36 @@
 
 //*********************************** CONFIGURATION **************************************************//
 //Buttons, Joystick & LED
-#define joystickX 14
-#define joystickY 15
+#define joystickX 8
+#define joystickY 9
 #define button_up 27
 #define button_down 26
 #define button_left 24
 #define button_right 29
-#define button_test1 33
-#define button_test2 31
-#define led_red 22
+#define button_backlight 33
+#define button_enter 31
+#define led_red 25
 #define led_yellow 23
-#define led_green 25
+#define led_green 22
 // Motor
-#define dir_motor_left_front 34
-#define hb_motor_left_front 35
-#define g_motor_left_front 7
-#define dir_motor_left_back 36
-#define hb_motor_left_back 37
+#define dir_motor_left_front 39    
+#define hb_motor_left_front 41
+#define g_motor_left_front 5
+#define dir_motor_left_back 38
+#define hb_motor_left_back 40
 #define g_motor_left_back 6
-#define dir_motor_right_front 38
-#define hb_motor_right_front 39
-#define g_motor_right_front 5
-#define dir_motor_right_back 40
-#define hb_motor_right_back 41
+#define dir_motor_right_front 36
+#define hb_motor_right_front 34
+#define g_motor_right_front 7
+#define dir_motor_right_back 35
+#define hb_motor_right_back 37
 #define g_motor_right_back 4
 // Servos
-#define servo_left_front 42
+#define servo_left_front 45
 #define servo_left_back 43
 #define servo_right_front 44
-#define servo_right_back 45
+#define servo_right_back 42
+
 #define servo_max_pulse 2100
 #define servo_min_pulse 900
 //Einstellugnen
@@ -60,11 +61,11 @@
 
 //************************************* KONSTANTEN ****************************************************//
 //LCD Menu
-const String menu[] = {"Info", "Einstellungen", "Reset"};
+const String menu[] = {"Info", "Einstellungen", "Funktionstest", "Reset"};
 const String settings[] = {"Max. Speed", "Kurve Speed", "Joystick", "Stufen Motor", "Stufen Raeder", "Bremse" };
-const int items = 3;
+const int items = 4;
 const int subItems = 6;
-const String v = "1.4";
+const String v = "1.5";
 //Roboter
 const int timeout = 1000;                    // WiFi Connection Timeout
 
@@ -87,11 +88,11 @@ Servo servoLB, servoLF, servoRF, servoRB;
 
 void setup() {
   //************************************** Debug *****************************************************//
-  
+  /*
   for (int i = 0 ; i <= subItems ; i++) {
     EEPROM.write(i, value[i]);
   }
-  
+  */
   //************************************** Debug *****************************************************//
 
   //*************************************** ROBOTER *****************************************************//
@@ -113,13 +114,15 @@ void setup() {
   pinMode(led_green, OUTPUT);
 
   digitalWrite(led_yellow, HIGH);
+  digitalWrite(led_green, HIGH);
   t1_1 = millis();
   t2_1 = millis();
 
   servoLF.writeMicroseconds(1405);
-  servoLB.writeMicroseconds(1515);
-  servoRF.writeMicroseconds(1435);
+  servoLB.writeMicroseconds(1435);
+  servoRF.writeMicroseconds(1515);
   servoRB.writeMicroseconds(1380);
+  
   analogWrite(g_motor_left_front, 0);
   analogWrite(g_motor_left_back, 0);
   analogWrite(g_motor_right_front, 0);
@@ -132,8 +135,8 @@ void setup() {
   pinMode(button_down, INPUT_PULLUP);
   pinMode(button_left, INPUT_PULLUP);
   pinMode(button_right, INPUT_PULLUP);
-  pinMode(button_test1, INPUT_PULLUP);
-  pinMode(button_test2, INPUT_PULLUP);
+  pinMode(button_backlight, INPUT_PULLUP);
+  pinMode(button_enter, INPUT_PULLUP);
 
   lcd.init();
   lcd.backlight();
@@ -164,8 +167,8 @@ void roboter() {
   if (servoVal == 0) {              //Gerade
     motorSpeed = value[0] /  value[3] * map(abs(motorVal), 0, 100, 0 , value[3]);
     servoLF.writeMicroseconds(1405);
-    servoLB.writeMicroseconds(1515);
-    servoRF.writeMicroseconds(1435);
+    servoLB.writeMicroseconds(1435);
+    servoRF.writeMicroseconds(1515);
     servoRB.writeMicroseconds(1380);
     if (motorVal > 0) {               //Vorwärts
       brakeOff();
@@ -189,8 +192,8 @@ void roboter() {
     motorSpeed = 1.42 * value[1] /  value[3] * map(abs(motorVal), 0, 100, 0 , value[3]);
     motorSpeedInner = motorSpeed * 43 / 100;
     servoLF.writeMicroseconds(map(servoAngle, 0, 100, 1405, 1824));
-    servoLB.writeMicroseconds(map(servoAngle, 0, 100, 1515, 1688));
-    servoRF.writeMicroseconds(map(servoAngle, 0, 100, 1435, 1045));
+    servoLB.writeMicroseconds(map(servoAngle, 0, 100, 1435, 1045));
+    servoRF.writeMicroseconds(map(servoAngle, 0, 100, 1515, 1688));
     servoRB.writeMicroseconds(map(servoAngle, 0, 100, 1380, 1205));
     if (motorVal > 0) {               //Vorwärts
       brakeOff();
@@ -214,8 +217,8 @@ void roboter() {
     motorSpeed = 1.42 * value[1] /  value[3] * map(abs(motorVal), 0, 100, 0 , value[3]);
     motorSpeedInner = motorSpeed * 43 / 100;
     servoLF.writeMicroseconds(map(servoAngle, 0, 100, 1405, 1219));
-    servoLB.writeMicroseconds(map(servoAngle, 0, 100, 1515, 1090));
-    servoRF.writeMicroseconds(map(servoAngle, 0, 100, 1435, 1605));
+    servoLB.writeMicroseconds(map(servoAngle, 0, 100, 1435, 1605));
+    servoRF.writeMicroseconds(map(servoAngle, 0, 100, 1515, 1090));
     servoRB.writeMicroseconds(map(servoAngle, 0, 100, 1380, 1803));
     if (motorVal > 0) {               //Vorwärts
       brakeOff();

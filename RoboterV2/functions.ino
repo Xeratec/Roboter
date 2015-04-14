@@ -13,17 +13,17 @@ void brakeOn() {
 }
 
 void forward() {
-  digitalWrite(dir_motor_left_front, LOW);
-  digitalWrite(dir_motor_left_back, LOW);
-  digitalWrite(dir_motor_right_front, LOW);
-  digitalWrite(dir_motor_right_back, LOW);
-}
-
-void backward() {
   digitalWrite(dir_motor_left_front, HIGH);
   digitalWrite(dir_motor_left_back, HIGH);
   digitalWrite(dir_motor_right_front, HIGH);
   digitalWrite(dir_motor_right_back, HIGH);
+}
+
+void backward() {
+  digitalWrite(dir_motor_left_front, LOW);
+  digitalWrite(dir_motor_left_back, LOW);
+  digitalWrite(dir_motor_right_front, LOW);
+  digitalWrite(dir_motor_right_back, LOW);
 }
 
 void serialEvent1() {
@@ -59,8 +59,8 @@ void checkControlMode() {
   if (controlMode == 0) {
     digitalWrite(led_yellow, HIGH);
     if (value[2] == 1) {
-      servoVal = map(analogRead(joystickX), 0, 1023, -100, 100);
-      motorVal = map(analogRead(joystickY), 0, 1023, -100, 100);
+      servoVal = -1 * map(analogRead(joystickX), 0, 1023, -100, 100);
+      motorVal = -1 * map(analogRead(joystickY), 0, 1023, -100, 100);
       if (motorVal > -5 & motorVal < 5) motorVal = 0;
       if (servoVal > -5 & servoVal < 5) servoVal = 0;
     }
@@ -217,13 +217,6 @@ void checkButtons() {
     if (!value_2) {
       switch (sub) {
         case 0:                           // Main Menü Backlight an-/ausschalten
-          if (bLight) {
-            lcd.noBacklight();
-            bLight = false;
-          } else {
-            lcd.backlight();
-            bLight = true;
-          }
           break;
         case 1:                          // 1. Untermenü ins Main Menu wechseln
           sub = 0;
@@ -250,7 +243,13 @@ void checkButtons() {
           sub = 1;
           lcd.clear();
           lcd.print("->" + menu[menuItem]);
-          if (menuItem == 2) {
+          if (menuItem == 2) {          // Funktions Test
+            delay(250);
+            funktionsTest();
+            menuItem = 0;
+            sub = 0;
+          }
+          if (menuItem == 3) {          // Reset
             delay(250);
             value[0] = default_max_speed;
             value[1] = default_kurve_speed;
@@ -277,12 +276,12 @@ void checkButtons() {
       do { } while (!digitalRead(button_down));
     }
   }
-  //Entprellen des Tasters TEST1
+  //Entprellen des Tasters BACKLIGHT
   value_1, value_2 = 0;
-  value_1 = digitalRead(button_test1);
+  value_1 = digitalRead(button_backlight);
   if (!value_1) {
     delay(50);
-    value_2 = digitalRead(button_test1);
+    value_2 = digitalRead(button_backlight);
     if (!value_2) {
       if (bLight) {
         lcd.noBacklight();
@@ -291,19 +290,213 @@ void checkButtons() {
         lcd.backlight();
         bLight = true;
       }
-      do { } while (!digitalRead(button_test1));
+      do { } while (!digitalRead(button_backlight));
     }
   }
-  //Entprellen des Tasters TEST2
+  //Entprellen des Tasters ENTER (Debug)
   value_1, value_2 = 0;
-  value_1 = digitalRead(button_test2);
+  value_1 = digitalRead(button_enter);
   if (!value_1) {
     delay(50);
-    value_2 = digitalRead(button_test2);
+    value_2 = digitalRead(button_enter);
     if (!value_2) {
-      digitalWrite(led_yellow, !digitalRead(led_yellow));
-      do { } while (!digitalRead(button_test2));
+      do { } while (!digitalRead(button_enter));
     }
   }
+}
+
+void funktionsTest() {
+  brakeOff();
+
+  digitalWrite(led_red, HIGH);
+  lcd.clear();
+  lcd.print("Motor Test");
+  delay(1000);
+  lcd.clear();
+  lcd.print("Zw. den Schritten");
+  lcd.setCursor(0, 1);
+  lcd.print("Enter druecken");
+  delay(3000);
+
+  lcd.clear();
+  lcd.print("Links Hinten");
+  lcd.setCursor(0, 1);
+  lcd.print("Vorwaerts");
+  forward();
+  analogWrite(g_motor_left_front, 20);
+  delay(1500);
+  analogWrite(g_motor_left_front, 0);
+  lcd.clear();
+  lcd.print("Links Hinten");
+  lcd.setCursor(0, 1);
+  lcd.print("Rueckwaerts");
+  delay(1000);
+  backward();
+  analogWrite(g_motor_left_front, 20);
+  delay(1500);
+  analogWrite(g_motor_left_front, 0);
+
+  do { } while (digitalRead(button_enter));
+
+  lcd.clear();
+  lcd.print("Links Vorne");
+  lcd.setCursor(0, 1);
+  lcd.print("Vorwaerts");
+  forward();
+  analogWrite(g_motor_left_back, 20);
+  delay(1500);
+  analogWrite(g_motor_left_back, 0);
+  lcd.clear();
+  lcd.print("Links Vorne");
+  lcd.setCursor(0, 1);
+  lcd.print("Rueckwaerts");
+  delay(1000);
+  backward();
+  analogWrite(g_motor_left_back, 20);
+  delay(1500);
+  analogWrite(g_motor_left_back, 0);
+
+  do { } while (digitalRead(button_enter));
+
+  lcd.clear();
+  lcd.print("Rechts Vorne");
+  forward();
+  lcd.setCursor(0, 1);
+  lcd.print("Vorwaerts");
+  analogWrite(g_motor_right_front, 20);
+  delay(1500);
+  analogWrite(g_motor_right_front, 0);
+  lcd.clear();
+  lcd.print("Rechts Vorne");
+  lcd.setCursor(0, 1);
+  lcd.print("Rueckwaerts");
+  delay(1000);
+  backward();
+  analogWrite(g_motor_right_front, 20);
+  delay(1500);
+  analogWrite(g_motor_right_front, 0);
+
+  do { } while (digitalRead(button_enter));
+
+  lcd.clear();
+  lcd.print("Rechts Hinten");
+  forward();
+  lcd.setCursor(0, 1);
+  lcd.print("Vorwaerts");
+  analogWrite(g_motor_right_back, 20);
+  delay(1500);
+  analogWrite(g_motor_right_back, 0);
+  lcd.clear();
+  lcd.print("Rechts Hinten");
+  lcd.setCursor(0, 1);
+  lcd.print("Rueckwaerts");
+  delay(1000);
+  backward();
+  analogWrite(g_motor_right_back, 20);
+  delay(1500);
+  analogWrite(g_motor_right_back, 0);
+
+  brakeOn();
+  do { } while (digitalRead(button_enter));
+
+  lcd.clear();
+  lcd.print("Servo Test");
+
+  digitalWrite(led_red, LOW);
+  delay(200);
+  digitalWrite(led_red, HIGH);
+  delay(200);
+  digitalWrite(led_red, LOW);
+  delay(200);
+  digitalWrite(led_red, HIGH);
+
+  lcd.clear();
+  lcd.print("Links Vorne");
+  lcd.setCursor(0, 1);
+  lcd.print("Links");
+  servoLF.writeMicroseconds(map(100, 0, 100, 1405, 1824));
+  delay(1500);
+  servoLF.writeMicroseconds(map(0, 0, 100, 1405, 1824));
+  delay(1000);
+  lcd.clear();
+  lcd.print("Links Vorne");
+  lcd.setCursor(0, 1);
+  lcd.print("Rechts");
+  servoLF.writeMicroseconds(map(100, 0, 100, 1405, 1219));
+  delay(1500);
+  servoLF.writeMicroseconds(map(0, 0, 100, 1405, 1219));
+
+  do { } while (digitalRead(button_enter));
+
+  lcd.clear();
+  lcd.print("Links Hinten");
+  lcd.setCursor(0, 1);
+  lcd.print("Links");
+  servoLB.writeMicroseconds(map(100, 0, 100, 1435, 1045));
+  delay(1500);
+  servoLB.writeMicroseconds(map(0, 0, 100, 1435, 1045));
+  delay(1000);
+  lcd.clear();
+  lcd.print("Links Hinten");
+  lcd.setCursor(0, 1);
+  lcd.print("Rechts");
+  servoLB.writeMicroseconds(map(100, 0, 100, 1435, 1605));
+  delay(1500);
+  servoLB.writeMicroseconds(map(0, 0, 100, 1435, 1605));
+
+  do { } while (digitalRead(button_enter));
+
+  lcd.clear();
+  lcd.print("Rechts Vorne");
+  lcd.setCursor(0, 1);
+  lcd.print("Rechts");
+  servoRF.writeMicroseconds(map(100, 0, 100, 1515, 1090));
+  delay(1500);
+  servoRF.writeMicroseconds(map(0, 0, 100, 1515, 1090));
+  delay(1000);
+  lcd.clear();
+  lcd.print("Rechts Vorne");
+  lcd.setCursor(0, 1);
+  lcd.print("Links");
+  servoRF.writeMicroseconds(map(100, 0, 100, 1515, 1688));
+  delay(1500);
+  servoRF.writeMicroseconds(map(0, 0, 100, 1515, 1688));
+
+  do { } while (digitalRead(button_enter));
+
+  lcd.clear();
+  lcd.print("Rechts Hinten");
+  lcd.setCursor(0, 1);
+  lcd.print("Rechts");
+  servoRB.writeMicroseconds(map(100, 0, 100, 1380, 1803));
+  delay(1500);
+  servoRB.writeMicroseconds(map(0, 0, 100, 1380, 1803));
+  delay(1000);
+  lcd.clear();
+  lcd.print("Rechts Hinten");
+  lcd.setCursor(0, 1);
+  lcd.print("Links");
+  servoRB.writeMicroseconds(map(100, 0, 100, 1380, 1205));
+  delay(1500);
+  servoRB.writeMicroseconds(map(0, 0, 100, 1380, 1205));
+
+  delay(200);
+  digitalWrite(led_red, LOW);
+  delay(200);
+  digitalWrite(led_red, HIGH);
+  delay(200);
+  digitalWrite(led_red, LOW);
+  delay(200);
+  digitalWrite(led_red, HIGH);
+  delay(200);
+  digitalWrite(led_red, LOW);
+  delay(200);
+  digitalWrite(led_red, HIGH);
+  delay(200);
+  digitalWrite(led_red, LOW);
+  delay(200);
+
+  lcd.clear();
+  refresh = true;
 }
 
