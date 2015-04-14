@@ -31,7 +31,7 @@
 #define led_yellow 23
 #define led_green 22
 // Motor
-#define dir_motor_left_front 39    
+#define dir_motor_left_front 39
 #define hb_motor_left_front 41
 #define g_motor_left_front 5
 #define dir_motor_left_back 38
@@ -66,6 +66,7 @@ const String settings[] = {"Max. Speed", "Kurve Speed", "Joystick", "Stufen Moto
 const int items = 4;
 const int subItems = 6;
 const String v = "1.5";
+const int autoBacklight = 5000;
 //Roboter
 const int timeout = 1000;                    // WiFi Connection Timeout
 
@@ -82,6 +83,7 @@ boolean refresh = true;
 //Roboter
 int controlMode = 0 ;                   // Kontroll Modus 0: Joystick, 1: XBee
 long t1_1 , t1_2, t2_1, t2_2;           // Timervariablen
+long t_backlight;
 String stringRead, num1, num2;
 int servoVal, motorVal, motorSpeed, motorSpeedInner, servoAngle;
 Servo servoLB, servoLF, servoRF, servoRB;
@@ -115,14 +117,13 @@ void setup() {
 
   digitalWrite(led_yellow, HIGH);
   digitalWrite(led_green, HIGH);
-  t1_1 = millis();
-  t2_1 = millis();
+  t1_1 = t2_1 = t_backlight = millis();
 
   servoLF.writeMicroseconds(1405);
   servoLB.writeMicroseconds(1435);
   servoRF.writeMicroseconds(1515);
   servoRB.writeMicroseconds(1380);
-  
+
   analogWrite(g_motor_left_front, 0);
   analogWrite(g_motor_left_back, 0);
   analogWrite(g_motor_right_front, 0);
@@ -249,6 +250,13 @@ void roboter() {
 }
 
 void showMenu() {
+  if (millis() - t_backlight > autoBacklight) {
+    t_backlight = millis();
+    lcd.noBacklight();
+    bLight = false;
+  }
+
+
   switch (sub) {
     case 0:                           // Main Menü darstellen
       if (refresh) {

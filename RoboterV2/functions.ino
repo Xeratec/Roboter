@@ -86,6 +86,12 @@ void checkButtons() {
     delay(50);
     value_2 = digitalRead(button_right);
     if (!value_2) {
+      t_backlight = millis();
+      if (!bLight) {
+        lcd.backlight();
+        bLight = true;
+      }
+
       switch (sub) {
         case 0:                           // Main Menü Menüpunkt wechseln
           refresh = true;
@@ -151,6 +157,12 @@ void checkButtons() {
     delay(50);
     value_2 = digitalRead(button_left);
     if (!value_2) {
+      t_backlight = millis();
+      if (!bLight) {
+        lcd.backlight();
+        bLight = true;
+      }
+
       switch (sub) {
         case 0:                           // Main Menü Menüpunkt wechseln
           refresh = true;
@@ -215,6 +227,12 @@ void checkButtons() {
     delay(50);
     value_2 = digitalRead(button_up);
     if (!value_2) {
+      t_backlight = millis();
+      if (!bLight) {
+        lcd.backlight();
+        bLight = true;
+      }
+
       switch (sub) {
         case 0:                           // Main Menü Backlight an-/ausschalten
           break;
@@ -238,6 +256,12 @@ void checkButtons() {
     delay(50);
     value_2 = digitalRead(button_down);
     if (!value_2) {
+      t_backlight = millis();
+      if (!bLight) {
+        lcd.backlight();
+        bLight = true;
+      }
+
       switch (sub) {
         case 0:                          // Main Menuins 1. Untermenü wechseln
           sub = 1;
@@ -283,6 +307,8 @@ void checkButtons() {
     delay(50);
     value_2 = digitalRead(button_backlight);
     if (!value_2) {
+      t_backlight = millis();
+
       if (bLight) {
         lcd.noBacklight();
         bLight = false;
@@ -297,7 +323,12 @@ void checkButtons() {
   value_1, value_2 = 0;
   value_1 = digitalRead(button_enter);
   if (!value_1) {
-    delay(50);
+    t_backlight = millis();
+    if (!bLight) {
+      lcd.backlight();
+      bLight = true;
+    }
+    
     value_2 = digitalRead(button_enter);
     if (!value_2) {
       do { } while (!digitalRead(button_enter));
